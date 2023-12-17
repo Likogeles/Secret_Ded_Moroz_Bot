@@ -88,13 +88,13 @@ async def get_text_message(msg: Message):
             kb = [
                 [types.KeyboardButton(text="Заполнить профиль заново")],
             ]
-            keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+            keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
             await bot.send_message(msg.from_user.id, "Отлично!\n\nВ ближайшее время ты узнаешь имя того, кто будет ждать твоего подарка!", reply_markup=keyboard)
         case UserState.waiting:
             kb = [
                 [types.KeyboardButton(text="Заполнить профиль заново")],
             ]
-            keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+            keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
             await bot.send_message(msg.from_user.id, "Ожидание жеребьёвки.", reply_markup=keyboard)
         case _:
             await bot.send_message(msg.from_user.id, "Игра идёт.")
