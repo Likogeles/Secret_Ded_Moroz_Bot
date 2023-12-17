@@ -1,7 +1,7 @@
 import asyncio
 import random
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
 from aiogram.types import Message
 from aiogram.filters import CommandStart
@@ -85,11 +85,24 @@ async def get_text_message(msg: Message):
         case UserState.setNotWant:
             usersList.getUserById(user.getId()).setNotWant(msg.text)
             usersList.getUserById(user.getId()).setState(UserState.waiting)
-            await bot.send_message(msg.from_user.id, "Отлично!\n\nВ ближайшее время ты узнаешь имя того, кто будет ждать твоего подарка!")
+            kb = [
+                [types.KeyboardButton(text="Заполнить профиль заново")],
+            ]
+            keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+            await bot.send_message(msg.from_user.id, "Отлично!\n\nВ ближайшее время ты узнаешь имя того, кто будет ждать твоего подарка!", reply_markup=keyboard)
         case UserState.waiting:
-            await bot.send_message(msg.from_user.id, "Ожидание жеребьёвки.")
+            kb = [
+                [types.KeyboardButton(text="Заполнить профиль заново")],
+            ]
+            keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+            await bot.send_message(msg.from_user.id, "Ожидание жеребьёвки.", reply_markup=keyboard)
         case _:
             await bot.send_message(msg.from_user.id, "Игра идёт.")
+    if msg.text:
+        if msg.text == "Заполнить профиль заново" and user.getState() == UserState.waiting:
+            usersList.getUserById(user.getId()).setState(UserState.setName)
+            await bot.send_message(msg.from_user.id, "1) Как тебя зовут?", reply_markup=types.ReplyKeyboardRemove())
+
     return
 
 
