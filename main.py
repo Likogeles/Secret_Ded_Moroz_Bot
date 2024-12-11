@@ -45,10 +45,10 @@ def shuffle_users():
 async def process_start_command(msg: Message):
     if not usersList.getUserById(msg.from_user.id):
         await new_user(User(msg.from_user.id, msg.from_user.first_name, msg.from_user.last_name, "UserState.setName"))
-        await bot.send_message(msg.from_user.id, "Привет и добро пожаловать в Тайного Деда Мороза в Точке кипения УлГТУ!\n\n"
-                                                 "Цена подарка: Не больше 1000 рублей.\n\n"
-                                                 "Сейчас нужно будет ответить на три вопроса.\n\nОтвечай внимательно, "
-                                                 "второй попытки не будет!\n\n1) Как тебя зовут?")
+        await bot.send_message(msg.from_user.id, "Приветствую и добро пожаловать на Тайного Деда Мороза в Точке кипения УлГТУ!\n\n"
+                                                 "Рекомендованная цена подарка: от 500 до 700 рублей.\n\n"
+                                                 "Сейчас тебе надлежит ответить на три вопроса.\n\nОтвечай внимательно, "
+                                                 "ибо второй попытки не будет!\n\n1) Какими именем и фамилией кличут тебя?")
     else:
         await bot.send_message(msg.from_user.id, "Твой профиль уже подключен.")
 
@@ -64,9 +64,9 @@ async def get_text_message(msg: Message):
                 shuffle_users()
                 for i in usersList.getUsers():
                     gift_user = usersList.getUserById(i.getGiftUserId())
-                    text = f"{gift_user.getUserLink()} ждёт твоего подарка!\n\n" \
-                           f"🟩 Этот человек хочет:\n{gift_user.getWant()}\n\n" \
-                           f"🟥 Этот человек не хочет:\n{gift_user.getNotWant()}"
+                    text = f'<span class="tg-spoiler">{gift_user.getUserLink()}</span> ждёт твоего дара!\n\n' \
+                           f'🟩 Этот человек желает:\n<span class="tg-spoiler">{gift_user.getWant()}</span>\n\n' \
+                           f'🟥 Этот человек не желает:\n<span class="tg-spoiler">{gift_user.getNotWant()}</span>'
                     await bot.send_message(i.getId(), text, parse_mode=ParseMode.HTML)
                     usersList.getUserById(i.getId()).setState(UserState.inGame)
                 await bot.send_message(mainUserId, "Игра начата", parse_mode=ParseMode.HTML)
@@ -77,11 +77,11 @@ async def get_text_message(msg: Message):
         case UserState.setName:
             usersList.getUserById(user.getId()).setRealName(msg.text)
             usersList.getUserById(user.getId()).setState(UserState.setWant)
-            await bot.send_message(msg.from_user.id, "2) Что бы тебе хотелось получить в подарок?")
+            await bot.send_message(msg.from_user.id, "2) Что бы ты хотел получить в дар?")
         case UserState.setWant:
             usersList.getUserById(user.getId()).setWant(msg.text)
             usersList.getUserById(user.getId()).setState(UserState.setNotWant)
-            await bot.send_message(msg.from_user.id, "3) Чего ты точно НЕ хочешь получить в подарок?")
+            await bot.send_message(msg.from_user.id, "3) Чего ты точно не желаешь получить в дар?")
         case UserState.setNotWant:
             usersList.getUserById(user.getId()).setNotWant(msg.text)
             usersList.getUserById(user.getId()).setState(UserState.waiting)
@@ -101,7 +101,7 @@ async def get_text_message(msg: Message):
     if msg.text:
         if msg.text == "Заполнить профиль заново" and user.getState() == UserState.waiting:
             usersList.getUserById(user.getId()).setState(UserState.setName)
-            await bot.send_message(msg.from_user.id, "1) Как тебя зовут?", reply_markup=types.ReplyKeyboardRemove())
+            await bot.send_message(msg.from_user.id, "1) Какими именем и фамилией кличут тебя?", reply_markup=types.ReplyKeyboardRemove())
 
     return
 

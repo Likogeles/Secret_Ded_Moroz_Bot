@@ -89,7 +89,7 @@ class User:
         self._want = want
 
     def getWant(self) -> str:
-        return self._want
+        return "— " + self._want
 
     def setNotWant(self, not_want: str):
         con = sqlite3.connect("users.db")
@@ -101,7 +101,7 @@ class User:
         self._not_want = not_want
 
     def getNotWant(self) -> str:
-        return self._not_want
+        return "— " + self._not_want
 
     def getFirstName(self) -> str:
         return self._first_name

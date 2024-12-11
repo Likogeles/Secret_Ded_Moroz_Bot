@@ -45,6 +45,7 @@ class UsersList:
 
     def __str__(self):
         usersStr = ""
+        k = 1
         for i in self._usersList:
             fullFlag = True
             if i.getRealName() == "-1":
@@ -53,11 +54,11 @@ class UsersList:
                 fullFlag = False
             if i.getNotWant() == "-1":
                 fullFlag = False
-            profile = " Профиль не заполнен"
+            profile = "Профиль не заполнен"
             square = "🟥"
             if fullFlag:
                 square = "🟩"
-                profile = " Профиль заполнен"
-
-            usersStr += f"{square} {i.getUserLink()}: {profile}\n"
+                profile = "Профиль заполнен"
+            usersStr += f"{square} {k}) {i.getUserLink()}: {profile}\n"
+            k += 1
         return usersStr
